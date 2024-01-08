@@ -12,11 +12,6 @@ async def init_models():
         await conn.run_sync(Base.metadata.create_all)
 
 
-@pytest.fixture(scope='module')
-def anyio_backend():
-    return 'asyncio'
-
-
 @pytest.fixture(scope='module', autouse=True)
 async def session():
     async with async_session_maker() as session:
@@ -36,8 +31,8 @@ class TestUserRepository:
         assert user_rep.session is not None
 
     @pytest.mark.anyio
-    async def test_add_user_return_user_model_with_username_and_id(self, session):
-        """ Тест добавления пользователя """
+    async def test_add_user_return_user_model_with_username(self, session):
+        """ Тест наличия имени пользователя при добавлении пользователя """
 
         user_rep = UserRepository(session)
 
@@ -52,7 +47,7 @@ class TestUserRepository:
 
     @pytest.mark.anyio
     async def test_add_user_return_user_model_with_id(self, session):
-        """ Тест добавления пользователя """
+        """ Тест наличия id при добавлении пользователя """
 
         user_rep = UserRepository(session)
 
