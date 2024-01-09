@@ -1,31 +1,23 @@
 import pytest
+import pytest_asyncio
 
-from app.db.database import engine, Base
 from app.utils.unitofwork import UnitOfWork
 from app.api.schemas.user import UserFromDB
 
 
-@pytest.fixture(scope='function', autouse=True)
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-
-
-@pytest.fixture(scope='module')
+@pytest_asyncio.fixture(scope="session")
 async def uow():
     return UnitOfWork()
 
 
+@pytest.mark.asyncio(scope="session")
 class TestUnitOfWork:
     """ Тесты утилиты UnitOfWork """
 
-    @pytest.mark.anyio
     async def test_session_factory_is_available(self, uow: UnitOfWork):
         """ Тест наличия фабрики сессий у UOW """
         assert uow.session_factory is not None
 
-    @pytest.mark.anyio
     async def test_uow_can_work_as_context_manager(self, uow: UnitOfWork):
         """ С утилитой UOW можно работать как с контекстным менеджером """
 

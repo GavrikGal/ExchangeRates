@@ -1,28 +1,22 @@
 import pytest
+import pytest_asyncio
 
 from app.repositories.user_repository import UserRepository
-from app.db.database import async_session_maker, engine, Base
+from app.db.database import async_session_maker
 from app.api.schemas.user import UserFromDB
 
 
-@pytest.fixture(scope='function', autouse=True)
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-
-
-@pytest.fixture(scope='module', autouse=True)
+@pytest_asyncio.fixture(scope="session")
 async def session():
-    async with async_session_maker() as session:
-        yield session
-    await session.close()
+    async with async_session_maker() as async_session:
+        yield async_session
+    await async_session.close()
 
 
+@pytest.mark.asyncio(scope="session")
 class TestUserRepository:
     """ Тесты репозитория пользователей """
 
-    @pytest.mark.anyio
     async def test_session_is_available(self, session):
         """ Тест наличие сессии в репозитории """
 
@@ -30,7 +24,6 @@ class TestUserRepository:
 
         assert user_rep.session is not None
 
-    @pytest.mark.anyio
     async def test_add_user_return_user_model_with_username(self, session):
         """ Тест наличия имени пользователя при добавлении пользователя """
 
@@ -45,7 +38,6 @@ class TestUserRepository:
 
         assert user_data_from_db.username == user_data['username']
 
-    @pytest.mark.anyio
     async def test_add_user_return_user_model_with_id(self, session):
         """ Тест наличия id при добавлении пользователя """
 

@@ -1,14 +1,10 @@
-import asyncio
-import pytest
+import pytest_asyncio
+
+from app.db.database import Base, engine
 
 
-# @pytest.yield_fixture(scope="session")
-# def event_loop(request):
-#     loop = asyncio.get_event_loop_policy().new_event_loop()
-#     yield loop
-#     loop.close()
-
-
-@pytest.fixture(scope='session')
-def anyio_backend(request):
-    return 'asyncio'
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def init_models():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)

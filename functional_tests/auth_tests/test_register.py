@@ -1,36 +1,25 @@
 import pytest
+import pytest_asyncio
 from httpx import AsyncClient
 
 from main import app
-from app.db.database import Base, engine
-from app.db.models import User
 
 
 register_url = '/auth/register/'
 
 
-@pytest.fixture(scope='function', autouse=True)
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-
-
-@pytest.fixture(scope='module')
-def anyio_backend():
-    return 'asyncio'
-
-
-@pytest.fixture(scope='module')
+# @pytest.fixture(scope='module')
+@pytest_asyncio.fixture(scope="session")
 async def client():
     async with AsyncClient(app=app, base_url='http://127.0.0.1') as client:
         yield client
 
 
+@pytest.mark.asyncio(scope="session")
 class TestRegister:
     """ Тесты регистрации """
 
-    @pytest.mark.anyio
+    # @pytest.mark.anyio
     async def test_register_endpoint_is_available(self, client):
         """ Тест доступности конечной точки для регистрации """
 
@@ -40,7 +29,7 @@ class TestRegister:
         # И видит, что эта точка существует
         assert response.status_code != 404
 
-    @pytest.mark.anyio
+    # @pytest.mark.anyio
     async def test_can_register(self, client):
         """ Тест возможности регистрации """
 
@@ -66,7 +55,7 @@ class TestRegister:
         # При этом, кроме id в json-ответе присутствует его username
         assert json_response['username'] == user_data['username']
 
-    @pytest.mark.anyio
+    # @pytest.mark.anyio
     async def test_different_users_have_different_id(self, client):
         """ Тест, проверяющий, что id разных пользователей разный """
 
