@@ -18,17 +18,16 @@ class TestUnitOfWork:
         """ Тест наличия фабрики сессий у UOW """
         assert uow.session_factory is not None
 
-    async def test_uow_can_work_as_context_manager(self, uow: UnitOfWork):
+    async def test_uow_can_work_as_context_manager(self,
+                                                   uow: UnitOfWork,
+                                                   test_user_data):
         """ С утилитой UOW можно работать как с контекстным менеджером """
 
-        user_data = {'username': 'test_username',
-                     'password': 'test_password'}
-
         async with uow:
-            user_from_db = await uow.user.add_one(user_data)
+            user_from_db = await uow.user.add_one(test_user_data)
             user_to_return = UserFromDB.model_validate(user_from_db)
             await uow.commit()
-            assert user_to_return.username == user_data['username']
+            assert user_to_return.username == test_user_data['username']
 
 
 

@@ -1,25 +1,13 @@
 import pytest
-import pytest_asyncio
-from httpx import AsyncClient
-
-from main import app
 
 
 register_url = '/auth/register/'
-
-
-# @pytest.fixture(scope='module')
-@pytest_asyncio.fixture(scope="session")
-async def client():
-    async with AsyncClient(app=app, base_url='http://127.0.0.1') as client:
-        yield client
 
 
 @pytest.mark.asyncio(scope="session")
 class TestRegister:
     """ Тесты регистрации """
 
-    # @pytest.mark.anyio
     async def test_register_endpoint_is_available(self, client):
         """ Тест доступности конечной точки для регистрации """
 
@@ -29,18 +17,14 @@ class TestRegister:
         # И видит, что эта точка существует
         assert response.status_code != 404
 
-    # @pytest.mark.anyio
-    async def test_can_register(self, client):
+    async def test_can_register(self,
+                                client,
+                                gal_data):
         """ Тест возможности регистрации """
 
-        # Гал хочет зарегистрировать со следующими данными
-        user_data = {
-            'username': 'test_gal1',
-            'password': 'test_password'
-        }
-
+        # Гал хочет зарегистрировать с данными из gal_data
         # Он отправляет эти данные на конечную точку регистрации
-        response = await client.post(register_url, json=user_data)
+        response = await client.post(register_url, json=gal_data)
 
         # Гал видит, что запрос отработал успешно
         assert response.status_code == 200
@@ -53,31 +37,25 @@ class TestRegister:
         assert 'id' in json_response
 
         # При этом, кроме id в json-ответе присутствует его username
-        assert json_response['username'] == user_data['username']
+        assert json_response['username'] == gal_data['username']
 
-    # @pytest.mark.anyio
-    async def test_different_users_have_different_id(self, client):
+    async def test_different_users_have_different_id(self,
+                                                     client,
+                                                     gal_data,
+                                                     shaitan_data):
         """ Тест, проверяющий, что id разных пользователей разный """
 
         # Гал и Шайтан хотят зарегистрироваться
-        # Они имеют два набора данных
-        user1_data = {
-            'username': 'test_gal',
-            'password': 'test_password'
-        }
-        user2_data = {
-            'username': 'test_shaitan',
-            'password': 'test_password'
-        }
+        # Они имеют два набора данных gal_data и shaitan_data
 
         # Сначала Гал отправляет свои данные для регистрации
-        response = await client.post(register_url, json=user1_data)
+        response = await client.post(register_url, json=gal_data)
 
         # Из ответа Гал запоминает свой id
         id_gal = response.json().get('id')
 
         # Потом Шайтан отправляет свои данные
-        response = await client.post(register_url, json=user2_data)
+        response = await client.post(register_url, json=shaitan_data)
 
         # И запоминает свой id
         id_shaitan = response.json().get('id')

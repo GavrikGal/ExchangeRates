@@ -15,12 +15,3 @@ class UserService:
             user_to_return = UserFromDB.model_validate(user_from_db)
             await self.uow.commit()
             return user_to_return
-
-        # session = get_async_session()
-        # user_rep = UserRepository(session)
-        # user_from_db = await user_rep.add_one(user.model_dump())
-        # user_to_return = UserFromDB.model_validate(user_from_db)
-        # await session.commit()
-        # await session.close()
-        #
-        # return user_to_return
