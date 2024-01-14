@@ -8,6 +8,7 @@ from httpx import AsyncClient
 from app.db.database import Base, engine
 from app.db.database import async_session_maker
 from app.db.models import User
+from app.api.schemas.user import UserCreate
 
 from main import app
 
@@ -45,6 +46,13 @@ async def db_async_clear():
 def db_clear():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(db_async_clear())
+
+
+@pytest.fixture
+def test_user_data_pydantic(test_user_data):
+    user_data = UserCreate(username=test_user_data['username'],
+                           password=test_user_data['password'])
+    return user_data
 
 
 @pytest.fixture
