@@ -19,7 +19,8 @@ async def client():
         yield client
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+# @pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="session")
 async def db_init():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -42,7 +43,7 @@ async def db_async_clear():
         await async_session.close()
 
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='function')
 def db_clear():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(db_async_clear())

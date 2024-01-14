@@ -5,6 +5,7 @@ from app.utils.unitofwork import UnitOfWork
 
 
 @pytest.mark.asyncio(scope="session")
+@pytest.mark.usefixtures('db_init', 'db_clear')
 class TestUserService:
     """ Тестирование функционала сервиса сохранения и получения пользователей """
 

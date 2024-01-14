@@ -5,6 +5,7 @@ register_url = '/auth/register/'
 
 
 @pytest.mark.asyncio(scope="session")
+@pytest.mark.usefixtures('db_clear', 'db_init')
 class TestRegister:
     """ Тесты регистрации """
 

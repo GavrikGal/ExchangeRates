@@ -5,6 +5,7 @@ from app.api.schemas.user import UserFromDB
 
 
 @pytest.mark.asyncio(scope="session")
+@pytest.mark.usefixtures('db_init', 'db_clear')
 class TestUserRepository:
     """ Тесты репозитория пользователей """
 

@@ -11,6 +11,7 @@ async def uow():
 
 
 @pytest.mark.asyncio(scope="session")
+@pytest.mark.usefixtures('db_init', 'db_clear')
 class TestUnitOfWork:
     """ Тесты утилиты UnitOfWork """
 
