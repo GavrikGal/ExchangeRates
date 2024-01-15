@@ -29,7 +29,7 @@ class IUnitOfWork(ABC):
         ...
 
 
-class UnitOfWork:
+class UnitOfWork(IUnitOfWork):
     def __init__(self):
         self.session_factory = async_session_maker
 
