@@ -7,7 +7,7 @@ from app.services.user_service import UserService
 class TestUserService:
     """ Модульное тестирование сервиса пользователя """
 
-    async def test_unit_of_work_is_available(self, test_user_create_schema, mock_uow):
+    async def test_unit_of_work_is_available(self, mock_uow):
         """ Тестирование установки утилиты UnitOfWork """
 
         user_service = UserService(mock_uow)
