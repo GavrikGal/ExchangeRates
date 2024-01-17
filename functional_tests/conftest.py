@@ -5,10 +5,27 @@ import pytest_asyncio
 from sqlalchemy import delete
 from httpx import AsyncClient
 
+from app.api.schemas.user import UserCreate
 from app.db.database import Base, engine
 from app.db.database import async_session_maker
 from app.db.models import User
+from app.services.user_service import UserService
+from app.utils.unitofwork import UnitOfWork
 from main import app
+
+
+async def async_user_in_db(user_data: UserCreate):
+    uow = UnitOfWork()
+    user_service = UserService(uow)
+    await user_service.add_user(user_data)
+
+
+@pytest.fixture(scope='function')
+def gal_in_db(gal_data):
+    user = UserCreate(username=gal_data['username'],
+                      password=gal_data['password'])
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(async_user_in_db(user))
 
 
 @pytest_asyncio.fixture(scope="session")

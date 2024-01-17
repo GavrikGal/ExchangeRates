@@ -14,17 +14,39 @@ async def get_user_service(uow: IUnitOfWork = Depends(UnitOfWork)) -> UserServic
 @app.post("/auth/register/", response_model=UserFromDB)
 async def register(user_data: UserCreate,
                    user_service: UserService = Depends(get_user_service)):
+    """ Конечная точка регистрации пользователя """
     # fake_user = UserFromDB(username=user_data.username, id=1)
 
-    # Кодер понимает, что дальше уже сложно обманывать
+    # Кодер понимает, что с фейковой БД уже сложно обманывать пользователя
     # и надо реализовать через TDD сервис сохранения пользователей
     # Поэтому кодер ожидает получить сервис, который, при передаче ему
     # входных данных нового пользователя, вернет ему пользователя с автоматически
     # сгенерированным id.
     # Id умеют генерировать базы данных. Осталось получить сервис.
-    # user_service = await get_user_service()
+    # Сервис будем получать через Depends - это проще
 
     # Сервис получен, теперь его надо тестировать
     user_from_db = await user_service.add_user(user_data)
 
     return user_from_db
+
+
+@app.post('/auth/login/')
+async def login():
+    """ Конечная точка логина """
+    # 1. Пользователь хочет конечную точку? Вот, пожалуйста
+    # pass
+
+    # 2. Пользователь хочет получить json? Ща дам
+    # return {'message': 'Держи json'}
+
+    # 3. Тип токена должен быть 'bearer'? Ща организуем
+    # return {'token_type': 'bearer'}
+
+    # 4. Хочет иметь 'access_token' в json-ответе? Ща засуну
+    return {'token_type': 'bearer',
+            'access_token': 'access_token'}
+
+    # 5. Походу пора реализовывать выдачу настоящих токенов этому пользователю
+    # Для этого есть библиотека JWT
+
