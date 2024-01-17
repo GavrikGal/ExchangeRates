@@ -10,6 +10,9 @@ class AuthService:
 
     @staticmethod
     async def authenticate(user: UserLogin):
+        # todo: Уже есть сервис пользователя,
+        # там должен быть метод получения пользователя
+
         user_dict: dict = user.model_dump()
-        # todo: Из репозитория получить пользователя
+
         pass
