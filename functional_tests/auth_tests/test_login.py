@@ -21,7 +21,7 @@ class TestLogin:
     async def test_can_login(self, client, gal_data, gal_in_db):
         """ Тест возможности залогиниться и получить JWT-токен """
 
-        # Гал - зарегистрированный пользователь. todo: фикстура гала в БД
+        # Гал - зарегистрированный пользователь.
         # Он отправляет логин и пароль на адрес логина
         response = await client.post(login_url, json=gal_data)
 

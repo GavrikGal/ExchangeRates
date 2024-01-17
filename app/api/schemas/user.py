@@ -11,3 +11,15 @@ class UserFromDB(BaseModel):
 
     id: int
     username: str
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class UserRegistered(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    username: str
+    password: str

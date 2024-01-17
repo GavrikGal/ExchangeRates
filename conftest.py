@@ -1,13 +1,20 @@
 import pytest
 
-from app.api.schemas.user import UserCreate, UserFromDB
+from app.api.schemas.user import UserCreate, UserFromDB, UserLogin
+
+
+@pytest.fixture
+def test_user_login_schema(test_user_data):
+    user_login = UserLogin(username=test_user_data['username'],
+                           password=test_user_data['password'])
+    return user_login
 
 
 @pytest.fixture
 def test_user_create_schema(test_user_data):
-    user_crate = UserCreate(username=test_user_data['username'],
+    user_create = UserCreate(username=test_user_data['username'],
                             password=test_user_data['password'])
-    return user_crate
+    return user_create
 
 
 @pytest.fixture
