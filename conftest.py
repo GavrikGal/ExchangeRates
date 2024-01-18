@@ -1,6 +1,6 @@
 import pytest
 
-from app.api.schemas.user import UserCreate, UserFromDB, UserLogin
+from app.api.schemas.user import UserCreate, UserFromDB, UserLogin, UserRegistered
 
 
 @pytest.fixture
@@ -8,6 +8,12 @@ def test_user_login_schema(test_user_data):
     user_login = UserLogin(username=test_user_data['username'],
                            password=test_user_data['password'])
     return user_login
+
+
+@pytest.fixture
+def test_user_registered_schema(test_user_data):
+    user_reg = UserRegistered.model_validate(test_user_data)
+    return user_reg
 
 
 @pytest.fixture

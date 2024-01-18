@@ -1,8 +1,6 @@
-
-
 from app.api.schemas.user import UserLogin
-from app.repositories.user_repository import UserRepository
-from app.db.database import async_session_maker
+from app.services.user_service import UserService
+from app.utils.unitofwork import UnitOfWork
 
 
 class AuthService:
@@ -10,9 +8,7 @@ class AuthService:
 
     @staticmethod
     async def authenticate(user: UserLogin):
-        # todo: Уже есть сервис пользователя,
-        # там должен быть метод получения пользователя
-
-        user_dict: dict = user.model_dump()
+        user_service = UserService(UnitOfWork())
+        user_from_db = await user_service.get_user(user)
 
         pass

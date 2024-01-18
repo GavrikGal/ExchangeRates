@@ -18,3 +18,11 @@ class TestUserService:
         user_from_service = await user_service.add_user(test_user_create_schema)
         assert user_from_service.username == test_user_create_schema.username
 
+    async def test_get_user(self, test_user_login_schema, user_in_db):
+        """ Функционал получения пользователя при наличии его в БД"""
+
+        uow = UnitOfWork()
+
+        user_service = UserService(uow)
+        user_from_service = await user_service.get_user(test_user_login_schema)
+        assert user_from_service.username == test_user_login_schema.username

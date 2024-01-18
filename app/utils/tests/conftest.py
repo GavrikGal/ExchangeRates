@@ -8,6 +8,7 @@ from app.utils.unitofwork import UnitOfWork
 def uow():
     return UnitOfWork()
 
+
 @pytest.fixture
 def mock_session_maker():
     with patch('app.utils.unitofwork.async_session_maker') as session_maker_instance:

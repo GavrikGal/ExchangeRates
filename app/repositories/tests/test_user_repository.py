@@ -22,6 +22,16 @@ class TestUserRepository:
         user_repository.session.execute.assert_awaited_once()
 
     async def test_add_one_return_some_result(self, user_repository, test_user_data):
-        """ Функция add_one отправляет состояние в БД (в сессию) """
+        """ Функция add_one возвращает результат """
         result = await user_repository.add_one(test_user_data)
+        assert result is not None
+
+    async def test_get_one_execute_query(self, user_repository, test_user_data):
+        """ Функция get_one отправляет запрос в БД (в сессию) """
+        await user_repository.get_one(test_user_data)
+        user_repository.session.execute.assert_awaited_once()
+
+    async def test_get_one_return_some_result(self, user_repository, test_user_data):
+        """ Функция get_one возвращает результат """
+        result = await user_repository.get_one(test_user_data)
         assert result is not None

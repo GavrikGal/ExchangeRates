@@ -39,3 +39,22 @@ class TestUserService:
         user_from_db = await user_service.add_user(test_user_create_schema)
 
         assert user_from_db == test_user_from_db_schema
+
+    async def test_get_user_called_get_one_rep_func(self, test_user_login_schema,
+                                                    mock_uow):
+        """ Функция get_user() вызывает функцию get_one() репозитория пользователя """
+
+        user_service = UserService(mock_uow)
+        await user_service.get_user(test_user_login_schema)
+
+        user_service.uow.user.get_one.assert_awaited_once()
+
+    async def test_get_user_returned_user_registered_schema(self, test_user_login_schema,
+                                                            mock_uow,
+                                                            test_user_registered_schema):
+        """ Функция get_user() возвращает валидного пользователя """
+
+        user_service = UserService(mock_uow)
+        user_from_db = await user_service.get_user(test_user_login_schema)
+
+        assert user_from_db == test_user_registered_schema

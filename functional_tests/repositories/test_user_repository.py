@@ -1,7 +1,7 @@
 import pytest
 
 from app.repositories.user_repository import UserRepository
-from app.api.schemas.user import UserFromDB
+from app.api.schemas.user import UserFromDB, UserRegistered
 
 
 @pytest.mark.asyncio(scope="session")
@@ -43,3 +43,18 @@ class TestUserRepository:
         await db_session.close()
 
         assert user_data_from_db.id is not None
+
+    async def test_get_one_return_user_model_with_username(self,
+                                                           db_session,
+                                                           test_user_data,
+                                                           user_in_db):
+        """ Тест наличия имени пользователя при получении пользователя """
+
+        user_rep = UserRepository(db_session)
+
+        user_from_db = await user_rep.get_one(test_user_data)
+        user_registered_from_db = UserRegistered.model_validate(user_from_db)
+
+        await db_session.close()
+
+        assert user_registered_from_db.username == test_user_data['username']

@@ -28,6 +28,14 @@ def gal_in_db(gal_data):
     loop.run_until_complete(async_user_in_db(user))
 
 
+@pytest.fixture(scope='function')
+def user_in_db(test_user_data):
+    user = UserCreate(username=test_user_data['username'],
+                      password=test_user_data['password'])
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(async_user_in_db(user))
+
+
 @pytest_asyncio.fixture(scope="session")
 async def client():
     async with AsyncClient(app=app, base_url='http://127.0.0.1') as client:
